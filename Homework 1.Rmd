@@ -1,0 +1,129 @@
+---
+title: "Homework 1"
+author: "Dakota Thompson"
+date: "2/4/2021"
+output: word_document
+---
+
+# Complete the following problems from Wickham and Grolemund:
+
+```{r setup, include=FALSE}
+library(nycflights13)
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Section 5.2.4, Exercise 1
+### Find all flights that
+
+```{r}
+flights
+```
+
+#### Had an arrival delay of two or more hours
+
+Arr_delay is in minutes, so 60 minutes per hour, then 2 hours would be 120 minutes. From there we have to have all of the delays that are greater than 2 hours and include the 2 hours.
+
+```{r}
+delay = filter(flights, arr_delay >= 120)
+delay
+```
+
+#### Flew to Houston (IAH or HOU)
+
+We got the destination airport of IAH or HOU.
+
+```{r}
+dest = filter(flights, dest == 'IAH' | dest == 'HOU')
+dest
+```
+
+#### Were operated by United, American, or Delta
+
+We got the carrier airline of UA (United) or AA (American) or DL (Delta).
+
+```{r}
+carrier1 = filter(flights, carrier == 'UA' | carrier == 'AA' | carrier == 'DL')
+carrier1
+```
+
+#### Departed in summer (July, August, and September)
+
+We got all the months of summer, which teh question says is July-Sept. As such we just need the montsh between 7 and 9.
+
+```{r}
+summer = filter(flights, between(month, 7, 9))
+summer
+```
+
+#### Arrived more than two hours late, but didn’t leave late
+
+We needed all the arr_delays that were more than 120 minutes late, however we also needed all the dep_delays to be less than one because we wanted 0 (left on time) and negative numbers (left early) as they didn't leave late. 
+
+```{r}
+deptimearrlate = filter(flights, arr_delay > 120 & dep_delay < 1)
+deptimearrlate
+```
+
+#### Were delayed by at least an hour, but made up over 30 minutes in flight
+
+
+
+```{r}
+delaymadeback = filter(flights, dep_delay >= 60)
+
+delaymadeback
+```
+
+#### Departed between midnight and 6am (inclusive)
+
+
+
+```{r}
+midto6 = filter(flights, )
+midto6
+```
+
+## Section 5.3.1, Exercise 3
+### Sort flights to find the fastest (highest speed) flights.
+
+```{r}
+flightsspeed = mutate(flights, speed = distance/air_time)
+highspeedtop = arrange(flightsspeed, desc(speed))
+highspeedtop
+```
+
+## Section 5.4.1, Exercise 3
+### What does the any_of() function do? 
+
+It searches a data frame for any of the characters put into the function.
+
+### Why might it be helpful in conjunction with this vector?
+#### vars <- c("year", "month", "day", "dep_delay", "arr_delay")
+
+It could make it easier to traverse a huge data frame for the flights that aren't performing as well (being on time) and when certain flights took place. It could also be used as a way to search flights within a period of time that were late, early, or on time. 
+
+## Section 5.5.2, Exercise 2
+
+Compare air_time with arr_time - dep_time. What do you expect to see? What do you see? What do you need to do to fix it?
+
+```{r}
+flightsarrdep = mutate(flights, arrmindep = arr_time-dep_time)
+flightsarrdep = select(flightsarrdep, arrmindep, air_time)
+flightsarrdep
+```
+
+I expect to see the same values as you would
+
+## Section 5.6.7, Exercises 4 and 5
+
+Look at the number of cancelled flights per day. Is there a pattern? Is the proportion of cancelled flights related to the average delay?
+
+Which carrier has the worst delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not? (Hint: think about flights %>% group_by(carrier, dest) %>% summarise(n()))
+
+## Section 5.7.1, Exercise 3
+
+What time of day should you fly if you want to avoid delays as much as possible? 
+
+
+
