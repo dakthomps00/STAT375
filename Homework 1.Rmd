@@ -49,7 +49,7 @@ carrier1
 
 #### Departed in summer (July, August, and September)
 
-We got all the months of summer, which teh question says is July-Sept. As such we just need the montsh between 7 and 9.
+We got all the months of summer, which the question says is July-Sept. As such we just need the months between 7 and 9.
 
 ```{r}
 summer = filter(flights, between(month, 7, 9))
@@ -67,25 +67,26 @@ deptimearrlate
 
 #### Were delayed by at least an hour, but made up over 30 minutes in flight
 
-
+We need the flights to be delayed by more than an hour in leaving, but also the ones who were delayed 30 minutes less than how they were delayed in departure to show they made that time back up.
 
 ```{r}
-delaymadeback = filter(flights, dep_delay >= 60)
-
+delaymadeback = filter(flights, arr_delay >= 120 & arr_delay <= dep_delay - 30)
 delaymadeback
 ```
 
 #### Departed between midnight and 6am (inclusive)
 
-
+We need the times between midnight and 1 am separate from 1 to 6 because 2400 > 100 and 600. So we have to put all the times from midnight to 1 or all the times from 1 to 6. 
 
 ```{r}
-midto6 = filter(flights, )
+midto6 = filter(flights, between(dep_time, 2400,2459) | between(dep_time, 100,600))
 midto6
 ```
 
 ## Section 5.3.1, Exercise 3
 ### Sort flights to find the fastest (highest speed) flights.
+
+I added a speed variable of distance over time. Then I arranged the data frame by speed in descending order.
 
 ```{r}
 flightsspeed = mutate(flights, speed = distance/air_time)
