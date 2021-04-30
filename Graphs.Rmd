@@ -1,0 +1,59 @@
+---
+title: "Graphs for Project"
+author: "Dakota Thompson"
+date: "04/16/2021"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+set.seed(101)
+library(ggplot2)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+R <- 10000
+
+classroom <- function(x) {
+  before <- rnorm(20, 0, 1)
+  
+  after1 <- rnorm((1-x)*20, 0, 1)
+  after2 <- rnorm(x*20, 3, 2)
+  after <- c(after1, after2)
+  
+  # Effect size
+  return((mean(after) - mean(before)) / sd(c(before, after)))
+}
+```
+
+```{r}
+after1 <- rnorm((1-0.2)*1000, 0, 1)
+after2 <- rnorm(0.2*1000, 3, 2)
+after <- c(after1, after2)
+
+df2 <- data.frame(after)
+
+before <- rnorm(1000, 0, 1)
+
+df3 <- data.frame(before)
+```
+
+```{r}
+ggplot(data=df3, aes(x=before)) + geom_histogram(color="#FFCC33", fill = "#993333") + labs(title="Normal Distribution",x="Numbers", y = "Count")
+```
+
+```{r}
+ggplot(data=df2, aes(x=after)) + geom_histogram(color="#FFCC33", fill = "#993333") + labs(title="Normal Distribution w/ Another Normal Distribution",x="Numbers", y = "Count")
+```
+
+```{r}
+compd <- replicate(R, classroom(0.2))
+t.test(compd)
+df <- data.frame(compd)
+```
+
+```{r}
+ggplot(data=df, aes(x=compd)) + geom_histogram(color="#993333", fill = "#993333") + geom_vline(xintercept = 0.3996703, linetype="dotted", color = "#FFCC33", size=1) + geom_vline(xintercept = 0.4087917, linetype="dotted", color = "#FFCC33", size=1)+
+  labs(title="Distribution of Effect Sizes",x="Effect Sizes", y = "Count")
+```
+
